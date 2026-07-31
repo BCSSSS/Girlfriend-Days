@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Xiao Mei — dari Sandy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ctext y='30' font-size='30'%3E%F0%9F%8C%B8%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+SC:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1b2a;
+    --ink-deep:#131220;
+    --paper:#f7f1e6;
+    --paper-deep:#efe5d2;
+    --blossom:#e2a3ae;
+    --blossom-soft:#f0c4cd;
+    --blossom-deep:#b4536a;
+    --gold:#c7a568;
+    --ink-text:#f2ece0;
+    --ink-sub: #cbc4d6;
+    --paper-text:#33291f;
+    --paper-sub:#7a6c56;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{
+    height:100%;
+    overflow:hidden;
+    font-family:'Inter', sans-serif;
+    background:var(--ink);
+  }
+
+  body{ position:relative; }
+
+  ::selection{ background:var(--blossom); color:var(--ink); }
+
+  button{ font-family:inherit; }
+
+  /* ---------- ambient falling petals ---------- */
+  #petals{
+    position:fixed; inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:2;
+  }
+  .falling-petal{
+    position:absolute;
+    top:-8vh;
+    width:16px; height:16px;
+    color:var(--blossom);
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+  }
+  @keyframes fall{
+    0%{ transform:translateY(-10vh) rotate(0deg); opacity:0; }
+    8%{ opacity:.75; }
+    92%{ opacity:.55; }
+    100%{ transform:translateY(112vh) rotate(360deg); opacity:0; }
+  }
+
+  /* ---------- stage / scenes ---------- */
+  .stage{ position:fixed; inset:0; z-index:3; }
+
+  .scene{
+    position:fixed; inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 9vh 7vw 14vh;
+    opacity:0;
+    transform:translateX(0) translateY(10px) scale(0.985);
+    filter:blur(6px);
+    pointer-events:none;
+    transition:opacity .85s cubic-bezier(.22,1,.36,1), transform .85s cubic-bezier(.22,1,.36,1), filter .85s cubic-bezier(.22,1,.36,1);
+  }
+  .scene.active{
+    opacity:1;
+    transform:translateX(0) translateY(0) scale(1);
+    filter:blur(0px);
+    pointer-events:auto;
+  }
+  .scene.enter-from-right{ transform:translateX(52px) translateY(0) scale(0.98); opacity:0; filter:blur(6px); transition:none; }
+  .scene.enter-from-left{ transform:translateX(-52px) translateY(0) scale(0.98); opacity:0; filter:blur(6px); transition:none; }
+  .scene.exit-to-left{ transform:translateX(-52px) translateY(0) scale(0.98); opacity:0; filter:blur(6px); }
+  .scene.exit-to-right{ transform:translateX(52px) translateY(0) scale(0.98); opacity:0; filter:blur(6px); }
+
+  .scene--dark{
+    background:
+      radial-gradient(ellipse 60% 45% at 18% 12%, rgba(199,165,104,0.10), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 85% 88%, rgba(180,83,106,0.16), transparent 60%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-deep) 100%);
+    color:var(--ink-text);
+  }
+  .scene--light{
+    background:
+      radial-gradient(ellipse 50% 40% at 88% 8%, rgba(180,83,106,0.08), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 10% 92%, rgba(199,165,104,0.10), transparent 60%),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+    color:var(--paper-text);
+  }
+
+  .scene-content{
+    max-width:640px;
+    width:100%;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1.4rem;
+  }
+
+  .overline{
+    font-family:'Inter', sans-serif;
+    font-size:clamp(0.68rem, 1.4vw, 0.8rem);
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  .scene--dark .overline{ color:var(--gold); }
+  .scene--light .overline{ color:var(--blossom-deep); }
+
+  .zh{
+    font-family:'Noto Serif SC', serif;
+  }
+
+  .heading{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-size:clamp(1.9rem, 5.4vw, 3.1rem);
+    line-height:1.15;
+    letter-spacing:0.01em;
+  }
+
+  .body-text{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:400;
+    font-size:clamp(1.15rem, 2.3vw, 1.42rem);
+    line-height:1.7;
+    max-width:520px;
+  }
+  .scene--dark .body-text{ color:var(--ink-sub); }
+  .scene--light .body-text{ color:var(--paper-sub); }
+
+  .body-text + .body-text{ margin-top:-0.6rem; }
+
+  .signature{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:clamp(1.1rem, 2vw, 1.3rem);
+    margin-top:0.4rem;
+  }
+
+  /* ---------- cover scene ---------- */
+  .cover-char{
+    font-family:'Noto Serif SC', serif;
+    font-size:clamp(4.5rem, 17vw, 8rem);
+    line-height:1;
+    color:var(--gold);
+    opacity:0.92;
+    font-weight:600;
+  }
+  .cover-title{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    font-size:clamp(2.1rem, 6vw, 3.6rem);
+    letter-spacing:0.02em;
+  }
+  .cover-sub{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color:var(--ink-sub);
+    font-size:clamp(1.1rem, 2.4vw, 1.35rem);
+  }
+
+  .begin-btn{
+    margin-top:1rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    padding:0.85rem 2.1rem;
+    border-radius:999px;
+    font-family:'Inter', sans-serif;
+    font-size:0.82rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:background .35s ease, color .35s ease, transform .35s ease;
+  }
+  .begin-btn:hover, .begin-btn:focus-visible{
+    background:var(--gold);
+    color:var(--ink-deep);
+    transform:translateY(-2px);
+  }
+
+  /* ---------- blossom interactive (final scene) ---------- */
+  .blossom-wrap{
+    position:relative;
+    width:min(84vw, 400px);
+    aspect-ratio:1/1;
+  }
+  .satellites{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+  .satellite-blossom{
+    position:absolute;
+    pointer-events:none;
+  }
+  .blossom{
+    cursor:pointer;
+    outline:none;
+  }
+  #blossom{
+    position:absolute;
+    top:50%; left:50%;
+    width:42%; height:42%;
+    transform:translate(-50%,-50%);
+    z-index:1;
+  }
+  .blossom .petal path{
+    fill:var(--blossom);
+    transform-box: fill-box;
+    transform-origin:center;
+    transform:scale(0.28);
+    opacity:.6;
+    transition:transform 1.15s cubic-bezier(.16,1,.3,1), opacity .9s ease, fill 1s ease;
+  }
+  .blossom .petal.p1 path{ transition-delay:0s; }
+  .blossom .petal.p2 path{ transition-delay:.09s; }
+  .blossom .petal.p3 path{ transition-delay:.18s; }
+  .blossom .petal.p4 path{ transition-delay:.27s; }
+  .blossom .petal.p5 path{ transition-delay:.36s; }
+  .blossom .center{
+    fill:var(--gold);
+    opacity:.7;
+    transition:opacity 1s ease .5s, r 1s ease .5s;
+  }
+  .blossom.bloomed .petal path{
+    transform:scale(1);
+    opacity:1;
+    fill:var(--blossom-soft);
+  }
+  .blossom.bloomed .center{ opacity:1; }
+  .blossom:not(.bloomed):hover .petal path,
+  .blossom:not(.bloomed):focus-visible .petal path{
+    opacity:.8;
+  }
+  .blossom.bloomed{ animation:sway 5.5s ease-in-out infinite; transform-origin:50% 60%; }
+  #blossom.bloomed{
+    filter:drop-shadow(0 0 14px rgba(226,163,174,0.55)) drop-shadow(0 0 30px rgba(199,165,104,0.25));
+  }
+  @keyframes sway{
+    0%,100%{ transform:rotate(-1.4deg); }
+    50%{ transform:rotate(1.4deg); }
+  }
+
+  /* ---------- sparkle burst particles ---------- */
+  .sparkle{
+    position:absolute;
+    top:50%; left:50%;
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 6px 1px rgba(199,165,104,0.7);
+    pointer-events:none;
+    opacity:0;
+    z-index:6;
+    animation:sparkle-burst 1.1s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .sparkle.sparkle--blossom{ background:var(--blossom-soft); box-shadow:0 0 6px 1px rgba(240,196,205,0.8); }
+  @keyframes sparkle-burst{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(0.3); }
+    18%{ opacity:1; }
+    100%{
+      opacity:0;
+      transform:
+        translate(calc(-50% + var(--sx)), calc(-50% + var(--sy)))
+        scale(1);
+    }
+  }
+
+  .petal-burst{
+    position:absolute;
+    top:50%; left:50%;
+    width:14px; height:14px;
+    color:var(--blossom);
+    pointer-events:none;
+    z-index:6;
+    opacity:.9;
+    animation:petal-burst-fly 1.6s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  @keyframes petal-burst-fly{
+    0%{ opacity:.95; transform:translate(-50%,-50%) rotate(0deg) scale(0.6); }
+    100%{
+      opacity:0;
+      transform:
+        translate(calc(-50% + var(--px)), calc(-50% + var(--py)))
+        rotate(var(--pr))
+        scale(1);
+    }
+  }
+
+  .touch-hint{
+    font-family:'Inter', sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-sub);
+    opacity:0.75;
+    transition:opacity .6s ease;
+  }
+  .touch-hint.hidden{ opacity:0; }
+
+  /* ---------- story-style progress bar (top) ---------- */
+  .story-bar{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:6;
+    display:flex;
+    gap:0.32rem;
+    padding: 0.9rem 0.9rem 0;
+    pointer-events:none;
+  }
+  .story-seg{
+    flex:1;
+    height:3px;
+    border-radius:3px;
+    background:rgba(199,165,104,0.22);
+    overflow:hidden;
+    position:relative;
+  }
+  .story-seg::after{
+    content:'';
+    position:absolute; inset:0 100% 0 0;
+    background:var(--gold);
+    border-radius:3px;
+    transition:right .5s cubic-bezier(.22,1,.36,1);
+  }
+  .story-seg.done::after{ right:0; }
+  .story-seg.current::after{
+    right:0;
+    animation:seg-glow 1.6s ease-in-out infinite;
+  }
+  @keyframes seg-glow{
+    0%,100%{ opacity:1; }
+    50%{ opacity:.72; }
+  }
+
+  /* ---------- tap-to-advance cue ---------- */
+  body.tap-nav .scene{ cursor:pointer; }
+  body.tap-nav button,
+  body.tap-nav .blossom,
+  body.tap-nav .wax-seal{ cursor:pointer; }
+
+  .tap-hint{
+    position:fixed;
+    left:50%; bottom:2.1rem;
+    transform:translateX(-50%);
+    z-index:5;
+    font-family:'Inter', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:rgba(199,165,104,0.75);
+    opacity:0;
+    transition:opacity 1.1s ease;
+    pointer-events:none;
+    text-align:center;
+    white-space:nowrap;
+  }
+  .tap-hint.show{ opacity:1; }
+  .tap-hint.hide{ opacity:0; }
+
+  @media (max-width:560px){
+    .tap-hint{ font-size:0.62rem; letter-spacing:0.1em; }
+  }
+
+  /* ---------- secret letter (wax seal envelope) ---------- */
+  .envelope-stage{
+    perspective:1200px;
+    margin-top:0.4rem;
+    width:100%;
+    display:flex;
+    justify-content:center;
+  }
+  .envelope{
+    position:relative;
+    width:min(80vw, 320px);
+    height:min(54vw, 208px);
+  }
+  .envelope-back{
+    position:absolute; inset:0;
+    background:linear-gradient(160deg, var(--paper-deep), var(--paper));
+    border-radius:7px;
+    box-shadow:0 20px 46px rgba(0,0,0,0.4), 0 2px 0 rgba(199,165,104,0.25) inset;
+    z-index:1;
+    overflow:hidden;
+  }
+  .envelope-back::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      linear-gradient(135deg, transparent 49.3%, rgba(0,0,0,0.08) 50%, transparent 50.7%),
+      linear-gradient(45deg, transparent 49.3%, rgba(0,0,0,0.08) 50%, transparent 50.7%);
+  }
+  .letter{
+    position:absolute;
+    left:6%; right:6%;
+    top:5%;
+    bottom:-4%;
+    background:var(--paper);
+    border:1px solid rgba(199,165,104,0.4);
+    border-radius:5px;
+    padding:1.3rem 1.15rem 1rem;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:0.55rem;
+    transform:translateY(4%);
+    transition:transform 1.3s cubic-bezier(.16,1,.3,1);
+    box-shadow:0 14px 30px rgba(0,0,0,0.22);
+    overflow:hidden;
+  }
+  .letter .zh-mark{
+    font-family:'Noto Serif SC', serif;
+    font-size:1.3rem;
+    color:var(--blossom-deep);
+    opacity:0.85;
+  }
+  .letter .body-text{
+    font-size:clamp(0.92rem, 2.1vw, 1.08rem);
+    color:var(--paper-text);
+    max-width:100%;
+  }
+  .letter .signature{ color:var(--blossom-deep); margin-top:0.15rem; }
+  .envelope-flap{
+    position:absolute;
+    top:0; left:0; right:0;
+    height:60%;
+    background:linear-gradient(160deg, var(--blossom-soft), var(--blossom));
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    transform-origin:top center;
+    transition:transform 1.15s cubic-bezier(.7,0,.3,1);
+    z-index:3;
+    display:flex; align-items:flex-end; justify-content:center;
+    padding-bottom:8%;
+    backface-visibility:hidden;
+  }
+  .wax-seal{
+    width:19%;
+    aspect-ratio:1/1;
+    border:none;
+    background:none;
+    padding:0;
+    cursor:pointer;
+    filter:drop-shadow(0 5px 10px rgba(0,0,0,.4));
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1), opacity .4s ease;
+    animation:seal-breathe 2.6s ease-in-out infinite;
+  }
+  @keyframes seal-breathe{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.05); }
+  }
+  .wax-seal:hover{ animation-play-state:paused; transform:scale(1.1); }
+  .wax-seal.cracked{
+    animation:none;
+    transform:scale(0) rotate(35deg);
+    opacity:0;
+    pointer-events:none;
+  }
+  .envelope.opened .envelope-flap{
+    transform:rotateX(180deg);
+    z-index:0;
+  }
+  .envelope.opened .letter{
+    transform:translateY(-62%) scale(1.015);
+  }
+  .letter-hint{
+    margin-top:0.9rem;
+  }
+
+  .envelope-glow{
+    position:absolute;
+    inset:-30% -20%;
+    border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(199,165,104,0.32), transparent 68%);
+    opacity:0;
+    transition:opacity 1.2s ease;
+    pointer-events:none;
+    z-index:0;
+  }
+  .envelope.opened ~ .envelope-glow,
+  .envelope.opened .envelope-glow{ opacity:1; }
+  .envelope-stage{ position:relative; }
+
+  @media (max-width:560px){
+    .scene{ padding: 8vh 6.5vw 15vh; }
+    .scene-content{ gap:1.1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .falling-petal{ animation:none; opacity:0; }
+    .scene, .blossom .petal path, .reveal{ transition-duration:.2s; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="petals" aria-hidden="true"></div>
+
+  <!-- reusable ambient petal shape -->
+  <svg width="0" height="0" style="position:absolute">
+    <symbol id="petal-icon" viewBox="0 0 40 40">
+      <path d="M20,20 C12,14 12,4 20,0 C28,4 28,14 20,20 Z" fill="currentColor"/>
+    </symbol>
+  </svg>
+
+  <main class="stage">
+
+    <!-- Scene 1 — Cover -->
+    <section class="scene scene--dark active" data-index="0">
+      <div class="scene-content">
+        <div class="overline">1 Agustus</div>
+        <div class="cover-char zh">梅</div>
+        <h1 class="cover-title">Untuk Liu Xiao Mei</h1>
+        <p class="cover-sub">dari Sandy</p>
+        <button class="begin-btn" id="beginBtn">Buka</button>
+      </div>
+    </section>
+
+    <!-- Scene 2 — Pure declaration of love -->
+    <section class="scene scene--dark" data-index="1">
+      <div class="scene-content">
+        <div class="overline zh">我爱你</div>
+        <p class="cover-sub" style="margin-top:-1rem;">wǒ ài nǐ — aku cinta kamu</p>
+        <h2 class="heading">Sebelum yang lain, aku mau kamu dengar ini dulu</h2>
+        <p class="body-text">Bukan basa-basi, bukan pemanis kata — aku benar-benar mencintaimu, Verlya. Dengan segala yang ada padamu: yang kuat dan yang masih belajar, yang sedang bersinar dan yang sedang lelah.</p>
+        <p class="body-text">Ini murni tentang kamu — tentang siapa kamu apa adanya, dan betapa aku mencintaimu, hari ini, dan hari-hari sesudahnya.</p>
+        <p class="signature">— Sandy</p>
+      </div>
+    </section>
+
+    <!-- Scene 3 — Berharganya kamu, bukan karena pencapaian -->
+    <section class="scene scene--light" data-index="2">
+      <div class="scene-content">
+        <div class="overline zh">心尖上的人</div>
+        <p class="cover-sub" style="margin-top:-1rem;">orang yang paling dekat dengan hatiku</p>
+        <h2 class="heading">Berhargamu bukan sesuatu yang perlu kamu buktikan</h2>
+        <p class="body-text">Ada orang yang jadi berharga karena apa yang mereka capai. Buatku kamu beda — berhargamu sudah ada sejak sebelum kamu membuktikan apa pun, sejak pertama kali aku benar-benar mengenal kamu.</p>
+        <p class="body-text">Cara kamu tetap tertawa walau capek, cara kamu peduli sama orang di sekitarmu, cara kamu jujur soal apa yang kamu rasakan — itu yang bikin aku sadar, kamu berharga karena kamu, apa adanya. Bukan karena hasil apa pun.</p>
+      </div>
+    </section>
+
+    <!-- Scene 4 — Alasan sederhana kenapa dia berarti -->
+    <section class="scene scene--dark" data-index="3">
+      <div class="scene-content">
+        <div class="overline">Kalau kamu tanya kenapa</div>
+        <h2 class="heading">Karena kamu, hari-hariku terasa lebih berarti</h2>
+        <p class="body-text">Aku nggak butuh alasan besar untuk sayang kamu. Kehadiranmu saja sudah cukup — cara kamu cerita hal-hal kecil, cara kamu tetap peduli walau sedang capek sendiri, cara kamu ada meskipun tidak selalu diminta.</p>
+        <p class="body-text">Kamu bukan cuma orang yang aku sayang. Kamu orang yang mengajariku apa artinya benar-benar menghargai seseorang — bukan karena dia sempurna, tapi karena dia jujur jadi dirinya sendiri.</p>
+        <p class="signature">— Sandy</p>
+      </div>
+    </section>
+
+    <!-- Scene 5 — Perjalanan / pencapaian -->
+    <section class="scene scene--light" data-index="4">
+      <div class="scene-content">
+        <div class="overline">Tentang bulan-bulan kemarin</div>
+        <h2 class="heading">Kamu sudah menempuh jalan yang tidak mudah</h2>
+        <p class="body-text">Latihan yang diulang berkali-kali, malam yang lebih panjang dari biasanya, dan tekanan yang mungkin tidak semua orang sempat lihat.</p>
+        <p class="body-text">Semua itu yang membawamu jadi Juara 1 di LKS Provinsi. Itu bukan kebetulan — itu hasil kerja kerasmu sendiri, dan pantas diakui sebagai itu.</p>
+      </div>
+    </section>
+
+    <!-- Scene 6 — Comfort re: LKSN -->
+    <section class="scene scene--dark" data-index="5">
+      <div class="scene-content">
+        <div class="overline zh">梅花香自苦寒来</div>
+        <p class="cover-sub" style="margin-top:-1rem;">wangi bunga plum lahir dari dingin yang paling pahit</p>
+        <h2 class="heading">Kalau LKSN kemarin masih terasa berat, itu wajar</h2>
+        <p class="body-text">Satu hasil di satu panggung tidak menghapus seluruh proses yang sudah kamu lewati untuk sampai ke sana. Kamu boleh sedih, boleh kecewa — perasaan itu nyata, dan tidak perlu buru-buru ditutup dengan kata "nggak apa-apa kok".</p>
+        <p class="body-text">Tapi hasil itu juga bukan angka yang menentukan siapa kamu.</p>
+      </div>
+    </section>
+
+    <!-- Scene 7 — Perjalanan hidup, lebih luas dari LKS -->
+    <section class="scene scene--light" data-index="6">
+      <div class="scene-content">
+        <div class="overline">Bukan hanya soal satu lomba</div>
+        <h2 class="heading">Perjalananmu jauh lebih besar dari itu</h2>
+        <p class="body-text">LKS hanya satu titik kecil dari cerita yang jauh lebih panjang. Ada tahun-tahun belajar, jatuh bangun, dan tumbuh jadi orang yang sekarang berdiri di sini — dan itu semua caramu sendiri, bukan pemberian siapa pun.</p>
+        <p class="body-text">Ketekunan, cara kamu bangkit tiap kali capek, cara kamu tetap peduli sama orang lain di tengah tekanan — itu yang aku lihat dan hargai, jauh melebihi hasil apa pun di atas panggung.</p>
+      </div>
+    </section>
+
+    <!-- Scene 8 — Personal message -->
+    <section class="scene scene--dark" data-index="7">
+      <div class="scene-content">
+        <div class="overline">Dari Sandy</div>
+        <h2 class="heading">Untuk Verlya</h2>
+        <p class="body-text">Aku ikut memperhatikan usahamu dari dekat, jadi aku tahu berapa banyak yang sudah kamu korbankan untuk sampai sejauh ini. Itu yang paling berarti buatku — bukan podium, bukan peringkat.</p>
+        <p class="body-text">Kamu tidak perlu menang di semua tempat untuk pantas dihargai. Kamu sudah pantas, dari awal, terlepas dari hasil apa pun.</p>
+        <p class="signature">— Sandy</p>
+      </div>
+    </section>
+
+    <!-- Scene 9 — Interactive bloom + closing -->
+    <section class="scene scene--light" data-index="8">
+      <div class="scene-content">
+        <div class="overline">Satu hal terakhir</div>
+        <p class="touch-hint" id="touchHint">Sentuh bunga di bawah ini</p>
+
+        <div class="blossom-wrap" id="blossomWrap" data-no-advance>
+          <div class="satellites" id="satellites" aria-hidden="true"></div>
+          <svg class="blossom" id="blossom" viewBox="0 0 200 200" role="button" tabindex="0" aria-label="Sentuh untuk memekarkan bunga plum">
+            <g class="petal p1"><path d="M100,100 C78,68 78,18 100,-2 C122,18 122,68 100,100 Z"/></g>
+            <g class="petal p2" transform="rotate(72 100 100)"><path d="M100,100 C78,68 78,18 100,-2 C122,18 122,68 100,100 Z"/></g>
+            <g class="petal p3" transform="rotate(144 100 100)"><path d="M100,100 C78,68 78,18 100,-2 C122,18 122,68 100,100 Z"/></g>
+            <g class="petal p4" transform="rotate(216 100 100)"><path d="M100,100 C78,68 78,18 100,-2 C122,18 122,68 100,100 Z"/></g>
+            <g class="petal p5" transform="rotate(288 100 100)"><path d="M100,100 C78,68 78,18 100,-2 C122,18 122,68 100,100 Z"/></g>
+            <circle class="center" cx="100" cy="100" r="9"></circle>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 10 — Secret letter (wax-seal envelope) -->
+    <section class="scene scene--dark" data-index="9">
+      <div class="scene-content">
+        <div class="overline">Satu lagi, khusus untukmu</div>
+        <h2 class="heading">Ada surat kecil yang aku titip di sini</h2>
+        <p class="touch-hint letter-hint" id="letterHint">Sentuh segel emasnya untuk membuka</p>
+
+        <div class="envelope-stage">
+          <div class="envelope-glow" aria-hidden="true"></div>
+          <div class="envelope" id="envelope" data-no-advance>
+            <div class="letter" id="letterPaper">
+              <p class="zh-mark">梅</p>
+              <p class="body-text">Kalau suatu hari nanti kamu ragu apakah kamu cukup, atau apakah semua usahamu berarti — buka lagi surat ini kapan saja.</p>
+              <p class="body-text">Aku akan selalu ada, menghargai setiap langkahmu — menang atau kalah, sedang bersinar atau sedang lelah.</p>
+              <p class="signature">Selalu, Sandy 🌸</p>
+            </div>
+            <div class="envelope-back"></div>
+            <div class="envelope-flap" id="envelopeFlap">
+              <button class="wax-seal" id="waxSeal" aria-label="Buka surat">
+                <svg viewBox="0 0 60 60" width="100%" height="100%">
+                  <circle cx="30" cy="30" r="28" fill="var(--blossom-deep)"></circle>
+                  <text x="30" y="39" text-anchor="middle" font-family="'Noto Serif SC', serif" font-size="24" fill="var(--gold)">梅</text>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="story-bar" id="storyBar" aria-hidden="true"></div>
+
+  <div class="tap-hint" id="tapHint">Ketuk kanan layar untuk lanjut · ketuk kiri untuk kembali</div>
+
+  <script>
+    (function(){
+      const scenes = Array.from(document.querySelectorAll('.scene'));
+      const beginBtn = document.getElementById('beginBtn');
+      const storyBar = document.getElementById('storyBar');
+      const tapHint = document.getElementById('tapHint');
+      document.body.classList.add('tap-nav');
+      let current = 0;
+      let navLock = false;
+
+      // build story-style progress segments (visual only, not clickable)
+      scenes.forEach(() => {
+        const seg = document.createElement('div');
+        seg.className = 'story-seg';
+        storyBar.appendChild(seg);
+      });
+      const segs = Array.from(storyBar.children);
+
+      function updateSegs(index){
+        segs.forEach((seg, i) => {
+          seg.classList.remove('done', 'current');
+          if (i < index) seg.classList.add('done');
+          else if (i === index) seg.classList.add('current');
+        });
+      }
+      updateSegs(0);
+
+      function goTo(index){
+        if (index < 0 || index >= scenes.length || index === current || navLock) return;
+        navLock = true;
+        const dir = index > current ? 1 : -1;
+        const from = scenes[current];
+        const to = scenes[index];
+
+        to.classList.remove('exit-to-left', 'exit-to-right');
+        to.classList.add(dir === 1 ? 'enter-from-right' : 'enter-from-left');
+
+        // force reflow so the "enter" starting position is applied before animating
+        void to.offsetWidth;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            to.classList.remove('enter-from-right', 'enter-from-left');
+            to.classList.add('active');
+            from.classList.remove('active');
+            from.classList.add(dir === 1 ? 'exit-to-left' : 'exit-to-right');
+          });
+        });
+
+        setTimeout(() => {
+          from.classList.remove('exit-to-left', 'exit-to-right');
+          navLock = false;
+        }, 900);
+
+        current = index;
+        updateSegs(current);
+
+        if (tapHint) {
+          tapHint.classList.remove('show');
+          if (current > 0 && current < scenes.length - 1) {
+            setTimeout(() => tapHint.classList.add('show'), 950);
+            setTimeout(() => tapHint.classList.remove('show'), 3200);
+          }
+        }
+      }
+
+      // secret letter — wax seal envelope
+      const envelope = document.getElementById('envelope');
+      const waxSeal = document.getElementById('waxSeal');
+      const letterHint = document.getElementById('letterHint');
+      const envelopeStage = document.querySelector('.envelope-stage');
+      if (waxSeal && envelope) {
+        waxSeal.addEventListener('click', () => {
+          if (envelope.classList.contains('opened')) return;
+          waxSeal.classList.add('cracked');
+          if (letterHint) letterHint.classList.add('hidden');
+          if (envelopeStage) spawnSparkles(envelopeStage, 14, 'sparkle--blossom', 90);
+          setTimeout(() => envelope.classList.add('opened'), 220);
+        });
+      }
+
+      beginBtn.addEventListener('click', () => goTo(1));
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') goTo(current + 1);
+        if (e.key === 'ArrowLeft') goTo(current - 1);
+      });
+
+      // ketuk layar untuk lanjut/kembali (mengabaikan tombol & elemen interaktif)
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('button, .blossom, .wax-seal, a, input, textarea, [data-no-advance]')) return;
+        const w = window.innerWidth;
+        if (e.clientX < w * 0.32) {
+          goTo(current - 1);
+        } else {
+          goTo(current + 1);
+        }
+      });
+
+      // touch swipe (tetap didukung sebagai gestur tambahan)
+      let touchStartX = null;
+      document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, {passive:true});
+      document.addEventListener('touchend', (e) => {
+        if (touchStartX === null) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 60) { dx < 0 ? goTo(current + 1) : goTo(current - 1); }
+        touchStartX = null;
+      }, {passive:true});
+
+      // ---------- sparkle / petal burst helpers ----------
+      function spawnSparkles(container, count, extraClass, radius){
+        for (let i = 0; i < count; i++){
+          const s = document.createElement('div');
+          s.className = 'sparkle' + (extraClass ? ' ' + extraClass : '');
+          const angle = Math.random() * Math.PI * 2;
+          const dist = (radius || 70) * (0.5 + Math.random() * 0.7);
+          s.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+          s.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+          s.style.animationDelay = (Math.random() * 0.15) + 's';
+          container.appendChild(s);
+          setTimeout(() => s.remove(), 1400);
+        }
+      }
+
+      function spawnPetalBurst(container, count){
+        for (let i = 0; i < count; i++){
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.classList.add('petal-burst');
+          svg.setAttribute('viewBox', '0 0 40 40');
+          const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+          use.setAttribute('href', '#petal-icon');
+          svg.appendChild(use);
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 60 + Math.random() * 90;
+          svg.style.setProperty('--px', Math.cos(angle) * dist + 'px');
+          svg.style.setProperty('--py', Math.sin(angle) * dist + 'px');
+          svg.style.setProperty('--pr', (Math.random() * 360 - 180) + 'deg');
+          svg.style.animationDelay = (Math.random() * 0.2) + 's';
+          container.appendChild(svg);
+          setTimeout(() => svg.remove(), 1900);
+        }
+      }
+
+      // ambient falling petals
+      const petalsWrap = document.getElementById('petals');
+      const count = window.innerWidth < 560 ? 10 : 18;
+      for (let i = 0; i < count; i++){
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.classList.add('falling-petal');
+        svg.setAttribute('viewBox', '0 0 40 40');
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute('href', '#petal-icon');
+        svg.appendChild(use);
+
+        const size = 10 + Math.random() * 14;
+        const duration = 9 + Math.random() * 10;
+        const delay = -Math.random() * duration;
+        svg.style.left = (Math.random() * 100) + 'vw';
+        svg.style.width = size + 'px';
+        svg.style.height = size + 'px';
+        svg.style.animationDuration = duration + 's';
+        svg.style.animationDelay = delay + 's';
+        svg.style.opacity = (0.3 + Math.random() * 0.4).toFixed(2);
+        petalsWrap.appendChild(svg);
+      }
+
+      // interactive blossom — sentuh untuk bermekaran
+      const blossom = document.getElementById('blossom');
+      const touchHint = document.getElementById('touchHint');
+      const satellitesWrap = document.getElementById('satellites');
+
+      const petalPath = 'M100,100 C78,68 78,18 100,-2 C122,18 122,68 100,100 Z';
+      const svgNS = 'http://www.w3.org/2000/svg';
+
+      const satelliteSpots = [
+        { top:'6%',  left:'50%', size:15, rotate:12  },
+        { top:'16%', left:'80%', size:11, rotate:-24 },
+        { top:'42%', left:'93%', size:13, rotate:34  },
+        { top:'70%', left:'86%', size:10, rotate:-14 },
+        { top:'88%', left:'62%', size:14, rotate:20  },
+        { top:'88%', left:'32%', size:11, rotate:-30 },
+        { top:'68%', left:'8%',  size:13, rotate:16  },
+        { top:'40%', left:'4%',  size:10, rotate:-18 },
+        { top:'16%', left:'20%', size:12, rotate:26  }
+      ];
+
+      const satellites = satelliteSpots.map(spot => {
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('viewBox', '0 0 200 200');
+        svg.classList.add('blossom', 'satellite-blossom');
+        svg.style.top = spot.top;
+        svg.style.left = spot.left;
+        svg.style.width = spot.size + '%';
+        svg.style.height = spot.size + '%';
+        svg.style.transform = `translate(-50%, -50%) rotate(${spot.rotate}deg)`;
+
+        [0, 72, 144, 216, 288].forEach((angle, pi) => {
+          const g = document.createElementNS(svgNS, 'g');
+          g.classList.add('petal', 'p' + (pi + 1));
+          if (angle) g.setAttribute('transform', `rotate(${angle} 100 100)`);
+          const path = document.createElementNS(svgNS, 'path');
+          path.setAttribute('d', petalPath);
+          g.appendChild(path);
+          svg.appendChild(g);
+        });
+
+        const circle = document.createElementNS(svgNS, 'circle');
+        circle.classList.add('center');
+        circle.setAttribute('cx', '100');
+        circle.setAttribute('cy', '100');
+        circle.setAttribute('r', '9');
+        svg.appendChild(circle);
+
+        satellitesWrap.appendChild(svg);
+        return svg;
+      });
+
+      const blossomWrap = document.getElementById('blossomWrap');
+
+      function bloom(){
+        if (blossom.classList.contains('bloomed')) return;
+        blossom.classList.add('bloomed');
+        touchHint.classList.add('hidden');
+        if (blossomWrap) {
+          spawnSparkles(blossomWrap, 16, '', 120);
+          spawnPetalBurst(blossomWrap, 6);
+        }
+        satellites.forEach((sat, i) => {
+          setTimeout(() => {
+            sat.classList.add('bloomed');
+            if (blossomWrap) spawnSparkles(blossomWrap, 3, '', 40);
+          }, 250 + i * 160);
+        });
+      }
+      blossom.addEventListener('click', bloom);
+      blossom.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bloom(); }
+      });
+    })();
+  </script>
+
+</body>
+</html>
